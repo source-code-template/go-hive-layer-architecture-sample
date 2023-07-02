@@ -10,12 +10,8 @@ import (
 	"github.com/core-go/hive"
 	"github.com/core-go/log"
 	"github.com/core-go/search/hive"
-	"github.com/core-go/search/template"
-	"github.com/core-go/search/template/xml"
-
 	"go-service/internal/handler"
 	"go-service/internal/model"
-	"go-service/internal/repository"
 	"go-service/internal/service"
 )
 
@@ -31,11 +27,6 @@ func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
 		return nil, errConn
 	}
 
-	templates, err := template.LoadTemplates(xml.Trim, "configs/query.xml")
-	if err != nil {
-		return nil, err
-	}
-
 	logError := log.LogError
 	validator := v.NewValidator()
 
@@ -45,7 +36,7 @@ func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	userRepository, err := repository.NewUserRepository(connection, templates)
+	userRepository, err := hive.NewWriter(connection, "users", userType)
 	if err != nil {
 		return nil, err
 	}

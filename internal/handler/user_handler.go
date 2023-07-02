@@ -32,15 +32,6 @@ func NewUserHandler(search func(ctx context.Context, m interface{}, results inte
 	return &UserHandler{service: service, Validate: validate, LogError: logError, search: search, paramIndex: paramIndex, filterIndex: filterIndex}
 }
 
-func (h *UserHandler) All(w http.ResponseWriter, r *http.Request) {
-	users, err := h.service.All(r.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	JSON(w, http.StatusOK, users)
-}
-
 func (h *UserHandler) Load(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	if len(id) == 0 {
@@ -136,7 +127,9 @@ func (h *UserHandler) Search(w http.ResponseWriter, r *http.Request) {
 	filter := UserFilter{Filter: &s.Filter{}}
 	s.Decode(r, &filter, h.paramIndex, h.filterIndex)
 
-	users, total, err := h.service.Search(r.Context(), &filter)
+	offset := s.GetOffset(filter.Limit, filter.Page)
+	var users []User
+	total, err := h.search(r.Context(), &filter, users, filter.Limit, offset)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
