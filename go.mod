@@ -8,7 +8,7 @@ require (
 	github.com/core-go/core v0.3.5
 	github.com/core-go/hive v0.2.3
 	github.com/core-go/log v0.1.4
-	github.com/core-go/search v0.2.10
+	github.com/core-go/search v0.2.11
 	github.com/gorilla/mux v1.8.0
 )
 

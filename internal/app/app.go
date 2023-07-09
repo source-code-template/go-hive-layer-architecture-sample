@@ -36,7 +36,7 @@ func NewApp(ctx context.Context, conf Config) (*ApplicationContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	userRepository, err := hive.NewWriter(connection, "users", userType)
+	userRepository, err := hive.NewRepository(connection, "users", userType)
 	if err != nil {
 		return nil, err
 	}

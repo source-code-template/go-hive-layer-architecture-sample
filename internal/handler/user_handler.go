@@ -129,7 +129,7 @@ func (h *UserHandler) Search(w http.ResponseWriter, r *http.Request) {
 
 	offset := s.GetOffset(filter.Limit, filter.Page)
 	var users []User
-	total, err := h.search(r.Context(), &filter, users, filter.Limit, offset)
+	total, err := h.search(r.Context(), &filter, &users, filter.Limit, offset)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
